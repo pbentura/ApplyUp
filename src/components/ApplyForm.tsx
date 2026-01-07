@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  AppliancesContext,
+  useAppliances,
+} from "../contexts/AppliancesContext";
 
 type Job = {
-  id: 'front' | 'back';
+  id: "front" | "back";
   title: string;
 };
 
@@ -15,12 +20,23 @@ export const ApplyForm = () => {
   const [email, setEmail] = useState("");
   const [job, setJob] = useState<Job["id"]>("front");
 
+  const navigate = useNavigate();
+
+  const { addAppliance } = useAppliances();
+
   return (
     <div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          alert(`${name}, ${email}, ${job}`);
+          addAppliance({
+            id: Date.now().toString(),
+            name,
+            phoneNumber: "",
+            job,
+            description: "",
+          });
+          navigate("/list");
         }}
         className="flex flex-col gap-4"
       >
@@ -47,7 +63,12 @@ export const ApplyForm = () => {
             setEmail(e.target.value);
           }}
         />
-        <select defaultValue="front" className="select" value={job} onChange={(e) => setJob(e.target.value as Job["id"])}>
+        <select
+          defaultValue="front"
+          className="select"
+          value={job}
+          onChange={(e) => setJob(e.target.value as Job["id"])}
+        >
           {JOBS.map((job) => (
             <option key={job.id} value={job.id}>
               {job.title}
