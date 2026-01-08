@@ -1,55 +1,68 @@
-import { createContext, PropsWithChildren, useContext, useState } from "react"
+import { createContext, PropsWithChildren, useContext, useState } from "react";
+
+export type UserRole = 'candidate' | 'interviewer'
 
 export type User = {
-    id: string
-    email: string
-    role: string
-    password: string
-}
+  id: string;
+  email: string;
+  role: UserRole;
+  password: string;
+};
 
 export type AuthContextType = {
-    user?: User
-    login: (email: string, password: string) => boolean
-    logout: () => void
-}
+  user?: User;
+  login: (email: string, password: string) => boolean;
+  logout: () => void;
+};
 
 export const AuthContext = createContext<AuthContextType>({
-    login: () => false,
-    logout: () => {},
+  login: () => false,
+  logout: () => {},
 });
 
-const USERS: User[] = [{
-    id: '1',
-    email: 'user@example.com',
-    role: 'user',
-    password: 'password123'
-}, {
-    id: '2',
-    email: 'admin@example.com',
-    role: 'admin',
-    password: 'password123'
-}]
+const USERS: User[] = [
+  {
+    id: "1",
+    email: "user@example.com",
+    role: "candidate",
+    password: "password123",
+  },
+  {
+    id: "2",
+    email: "admin@example.com",
+    role: "interviewer",
+    password: "password123",
+  },
+];
 
-export const AuthProvider = ({children}: PropsWithChildren) => {
+export const AuthProvider = ({ children }: PropsWithChildren) => {
 
- const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<User>();
 
- return <AuthContext.Provider value={{
-    user,
-    logout: () => { setUser(undefined) },
-    login: (email: string, password: string) => {
-        const user = USERS.find(u => u.email === email && u.password === password);
-        if (user) {
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        logout: () => {
+          setUser(undefined);
+        },
+        login: (email: string, password: string) => {
+          const user = USERS.find(
+            (u) => u.email === email && u.password === password
+          );
+          if (user) {
             setUser(user);
             return true;
-        }
-        return false;
-    }
- }}>
-    {children}
- </AuthContext.Provider>
-}
+          }
+          return false;
+        },
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
 export const useAuth = () => {
-    return useContext(AuthContext);
-}
+  return useContext(AuthContext);
+};

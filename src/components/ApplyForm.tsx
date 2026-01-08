@@ -2,8 +2,10 @@ import { PropsWithChildren, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppliances } from "../contexts/AppliancesContext";
 
+type JobId = 'front' | 'back';
+
 type Job = {
-  id: "front" | "back";
+  id: JobId;
   title: string;
 };
 
@@ -15,7 +17,7 @@ const JOBS: Job[] = [
 export const ApplyForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [job, setJob] = useState<Job["id"]>("front");
+  const [jobId, setJobId] = useState<JobId>("front");
 
   const navigate = useNavigate();
 
@@ -30,7 +32,7 @@ export const ApplyForm = () => {
             id: Date.now().toString(),
             name,
             phoneNumber: "",
-            job,
+            job: jobId,
             description: "",
           });
           navigate("/list");
@@ -65,8 +67,8 @@ export const ApplyForm = () => {
         <select
           defaultValue="front"
           className="select"
-          value={job}
-          onChange={(e) => setJob(e.target.value as Job["id"])}
+          value={jobId}
+          onChange={(e) => setJobId(e.target.value as JobId)}
         >
           {JOBS.map((job) => (
             <option key={job.id} value={job.id}>

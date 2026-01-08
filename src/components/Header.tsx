@@ -2,18 +2,26 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 export const Header = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <div className="flex flex-row gap-4">
       {user ? (
-        <span>{user.email}</span>
+        <>
+          <span>{user.email}</span>
+          <button
+            onClick={logout}
+            className="m-4 inline-block text-blue-500 underline"
+          >
+            Logout
+          </button>
+        </>
       ) : (
-        <Link to="/login" className="m-4 inline-block text-blue-500 underline">
+        <Link to="/" className="m-4 inline-block text-blue-500 underline">
           Login
         </Link>
       )}
-      <Link to="/" className="m-4 inline-block text-blue-500 underline">
+      <Link to="/form" className="m-4 inline-block text-blue-500 underline">
         Formulaire
       </Link>
       <Link to="/list" className="m-4 inline-block text-blue-500 underline">
